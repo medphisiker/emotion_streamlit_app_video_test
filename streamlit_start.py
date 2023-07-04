@@ -1,7 +1,9 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from streamlit_image_select import image_select
 from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.editor import ImageSequenceClip
+import numpy as np
 
 
 def load_image(path2image):
@@ -26,6 +28,32 @@ if __name__ == "__main__":
 
     if split_video_btn:
         clip = VideoFileClip("01-01-01-01-01-01-01.mp4")
+
+        progress_text = "Преобразование видео"
+        progress_bar = st.progress(0, text=progress_text)
+
+        fps = clip.fps
+        total_frames = int(fps * clip.duration)
+        frames_in_percent = int(total_frames / 100)
+        st.write(f"Всего кадров видео в {total_frames}")
+
+        cnt = 0
+        clip_frames = []
         for i, frame in enumerate(clip.iter_frames()):
-            # Do something with the frame
-            st.write(i, frame.shape)
+            image = Image.fromarray(frame.astype("uint8"), "RGB")
+            draw = ImageDraw.Draw(image)
+            font = ImageFont.truetype("FreeMono.ttf", 36)
+            draw.text((10, 10), f"Кадр {i}/{total_frames}", font=font, fill=(0, 255, 0))
+            frame = np.array(image)
+            clip_frames.append(frame)
+            cnt += 1
+            if cnt // frames_in_percent == 1:
+                progress_bar.progress(i, text=f"Обработка {i}%")
+                cnt = cnt % frames_in_percent
+
+        joined_video = "video.mp4"
+        clip = ImageSequenceClip(clip_frames, fps)
+        clip.write_videofile(joined_video)
+
+        st.title("Склеенное из кадров видео")
+        st.video(joined_video)

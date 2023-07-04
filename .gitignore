@@ -1,2 +1,5 @@
 # ignore cache
 **__pycache__**
+
+# ignore output video
+video.mp4
