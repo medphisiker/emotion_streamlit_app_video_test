@@ -42,7 +42,7 @@ if __name__ == "__main__":
         for i, frame in enumerate(clip.iter_frames()):
             image = Image.fromarray(frame.astype("uint8"), "RGB")
             draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype("FreeMono.ttf", 36)
+            font = ImageFont.truetype("Roboto-Regular.ttf", 36)
             draw.text((10, 10), f"Кадр {i}/{total_frames}", font=font, fill=(0, 255, 0))
             frame = np.array(image)
             clip_frames.append(frame)
