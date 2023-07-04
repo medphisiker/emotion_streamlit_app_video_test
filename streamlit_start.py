@@ -35,7 +35,7 @@ if __name__ == "__main__":
         fps = clip.fps
         total_frames = int(fps * clip.duration)
         frames_in_percent = int(total_frames / 100)
-        st.write(f"Всего кадров видео в {total_frames}")
+        st.write(f"Всего кадров в видео, - {total_frames}")
 
         cnt = 0
         clip_frames = []
